@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodos Iterativos</title>
+    <script src="./JacobiGaussSeidel.js" defer></script>
+</head>
+<body>
+    <h2>Metodos de Jacobi y Gauss-Seidel</h2>
+    <hr>
+    <div id="div-jacobi">
+        <span>Método de Jacobi  </span><div id="jacobi" class="resultados"></div>
+    </div>    
+    <div id="div-gaussSeidel">
+        <span>Método de Gauss-Seidel</span><div id="gauss" class="resultados"></div>
+    </div>
+</body>
+<style>
+
+    html{
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    h2{
+        text-align: center;
+    }
+
+    div{
+        margin: auto;
+        width: 30%;
+        /*border: .3rem solid gray;*/
+        border-radius: 2rem;
+    }
+    
+    .resultados{
+        box-sizing: border-box;
+        width: 100%;
+        padding: 1.3em;
+        border: 1pt solid green;
+    }
+
+    span{
+        margin: 2em 0;
+        padding-bottom: 2em;
+        text-align: center;
+    }
+</style>
+</html>
