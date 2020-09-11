@@ -10,19 +10,19 @@ matrizA =  [[ 6, 3,-1,-2],              // Ordenada por Fila
             [ 5,-1, 2, 8]
             ];
 
-///
+//*/
 matrizA =  [[-3, 9,-1, 3],              // ORIGINAL
             [ 2,-1,13,-1],
             [ 5,-1, 2, 8],
             [ 6, 3,-1,-2]];
-*/
+/*
 matrizA =  [[-3, 9,-1, 3],              // TESTEO
             [ 2,-1,13,-1],
             [ 8, 5,-1, 2],
             [ 6, 3,-1,-2]];
 
 
-/*
+//
 matrizA =  [[  9, -1, 3,-3],            // Ordenada por Columna
             [ -1, 13,-1, 2],
             [ -1,  2, 8, 5],
@@ -67,8 +67,8 @@ function jacobi(){
   //  var textJacobi = document.getElementById("jacobi")
     var vectorXInicial = [0,0,0,0];
     var vectorXResultado = [0,0,0,0];
-    var iteraciones = 0;
-    while (iteraciones < maxIteraciones) {
+    var iteraciones = 1;
+    while (iteraciones <= maxIteraciones) {
         
         let fila = 0;        
         while (fila < numEcuaciones) {
@@ -97,13 +97,15 @@ function jacobi(){
                 //IMPRIME RESULTADOS EN LA PAGINA
                 textJacobi.innerText = `Vector Solucion obtenido en ${iteraciones} iteraciones:`
                 vectorXResultado.forEach(xres => {
-                    textJacobi.innerText += "\n" + xres    
+                    textJacobi.innerText += "\n" + xres.toFixed(4)    
                 });
                 console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado}`)
                 return vectorXResultado;
             }
         }
-            
+        
+        if (iteraciones <= 4){console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado.map( x => {return x.toFixed(4)})}`)}
+        
         vectorXInicial = vectorXResultado.slice();
         iteraciones++;
 
@@ -115,7 +117,7 @@ function jacobi(){
     console.log (`La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:\n${vectorXResultado}`)
     textJacobi.innerText = `La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:`
                 vectorXResultado.forEach(element => {
-                    textJacobi.innerText += "\n" + element    
+                    textJacobi.innerText += "\n" + element.toFixed(4)       
                 });
 
     return new Array(numEcuaciones);
@@ -127,47 +129,56 @@ function gaussSeidel(){
 
     var vectorXInicial = [0,0,0,0];
     var vectorXResultado = [0,0,0,0];
-    var iteraciones = 0;
+    var iteraciones = 1;
     var textGauss = document.getElementById("gauss")
     
-      while (iteraciones < maxIteraciones) {
-        vectorXResultado = vectorXInicial.slice()
+      while (iteraciones <= maxIteraciones) {
+        //vectorXResultado = vectorXInicial.slice()
         let fila = 0;        
-          while (fila < numEcuaciones) {
-              let suma = 0;
-              let columna = 0;
-              while (columna < numEcuaciones ) {
-                  if (columna !== fila){
-                      //vectorXInicial.forEach( x => { 
-                      
-                      suma += vectorXInicial[columna] * matrizA[fila][columna]
-                      //}); 
-                  }
-                  columna++;            
-              }
-              vectorXInicial[fila] = ((matrizB[fila]-suma)/matrizA[fila][fila]);
-              fila++;
-          }    
-          
-          let aproximados = 0;
-          for (let i = 0; i < vectorXResultado.length; i++){
-              let errorAprox = Math.abs(vectorXResultado[i] - vectorXInicial[i])
-              if (errorAprox > epsilon) break;
-              aproximados++;
-              if (aproximados == numEcuaciones) {
-  
-                  //IMPRIME RESULTADOS EN LA PAGINA
-                  textGauss.innerText = `Vector Solucion obtenido en ${iteraciones} iteraciones:`
-                  vectorXResultado.forEach(element => {
-                    textGauss.innerText += "\n" + element    
-                  });
-                  console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado}`)
-                  return vectorXResultado;
-              }
-          }
-              
-          //vectorXInicial = vectorXResultado.slice();
-          iteraciones++;
+        while (fila < numEcuaciones) {
+            let suma1 = 0;
+            let suma2 = 0
+          /*let columna = 0;
+            while (columna < numEcuaciones ) {
+                if (columna === 1 ){
+                    suma += vectorXInicial[columna] * matrizA[fila][columna]
+                } else {
+                    suma += (vectorXResultado[columna]*matrizA[fila][columna]) (vectorXInicial[columna] * matrizA[fila][columna])
+                }
+                columna++;            
+            }*/
+
+            for (let columna = 0; columna <= fila-1; columna++){
+                suma1 += (vectorXResultado[columna]*matrizA[fila][columna])
+            }
+
+            for (let columna = fila+1; columna < numEcuaciones; columna++){
+                suma2 += (vectorXInicial[columna]*matrizA[fila][columna])
+            }
+            vectorXResultado[fila] = ((matrizB[fila]-suma1-suma2)/matrizA[fila][fila]);
+            fila++;
+        }    
+        
+        let aproximados = 0;
+        for (let i = 0; i < vectorXResultado.length; i++){
+            let errorAprox = Math.abs(vectorXResultado[i] - vectorXInicial[i])
+            if (errorAprox > epsilon) break;
+            aproximados++;
+            if (aproximados == numEcuaciones) {
+
+                //IMPRIME RESULTADOS EN LA PAGINA
+                textGauss.innerText = `Vector Solucion obtenido en ${iteraciones} iteraciones:`
+                vectorXResultado.forEach(element => {
+                textGauss.innerText += "\n" + element.toFixed(4)       
+                });
+                console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado}`)
+                return vectorXResultado;
+            }
+        }
+    
+        if (iteraciones <= 4){console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado.map( x => {return x.toFixed(4)})}`)}
+        vectorXInicial = vectorXResultado.slice();
+        iteraciones++;
   
       }
   
@@ -177,7 +188,7 @@ function gaussSeidel(){
       console.log (`La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:\n${vectorXResultado}`)
       textGauss.innerText = `La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:`
                   vectorXResultado.forEach(element => {
-                    textGauss.innerText += "\n" + element    
+                    textGauss.innerText += "\n" + element.toFixed(3)       
                   });
 
     return new Array(numEcuaciones);
@@ -340,16 +351,16 @@ console.log("============ METODO GAUSS-SEIDEL ==============")
 //resultadoGauss = gaussSeidel();
 //console.log(resultadoGauss)
 
-valor = (-3*resultadoGauss[3])+(9*resultadoGauss[0])+(-1*resultadoGauss[1])+(3*resultadoGauss[2])
+valor = (-3*resultadoGauss[0])+(9*resultadoGauss[1])+(-1*resultadoGauss[2])+(3*resultadoGauss[3])
 console.log("Solucion Ec1 = " + valor)
 
-valor = (2*resultadoGauss[3])+(-1*resultadoGauss[0])+(13*resultadoGauss[1])+(-1*resultadoGauss[2])
+valor = (2*resultadoGauss[0])+(-1*resultadoGauss[1])+(13*resultadoGauss[2])+(-1*resultadoGauss[3])
 console.log("Solucion Ec2 = " + valor)
 
-valor = (5*resultadoGauss[3])+(-1*resultadoGauss[0])+(2*resultadoGauss[1])+(8*resultadoGauss[2])
+valor = (5*resultadoGauss[0])+(-1*resultadoGauss[1])+(2*resultadoGauss[2])+(8*resultadoGauss[3])
 console.log("Solucion Ec3 = " + valor)
 
-valor = (6*resultadoGauss[3])+(3*resultadoGauss[0])+(-1*resultadoGauss[1])+(-2*resultadoGauss[2])
+valor = (6*resultadoGauss[0])+(3*resultadoGauss[1])+(-1*resultadoGauss[2])+(-2*resultadoGauss[3])
 console.log("Solucion Ec4 = " + valor)
 
 
