@@ -1,0 +1,47 @@
+@font-face{
+    font-family: 'Lora';
+    src: url("../misc/Lora-BoldItalic.ttf") format("truetype");
+    font-weight: bold;       
+}
+
+input.input {
+    max-width: 5rem;
+        
+}
+
+input.parametro[type=number]{
+    width: 4rem;
+}
+
+input.parametro[type=text]{
+    
+    min-width: 8rem;
+}
+
+input.input::placeholder{
+    font-family: 'Lora', serif;
+    font-weight: bold;
+    font-size: 1.5em;
+    color:black;
+    opacity: 0.25;
+    
+}
+/*
+input.input::-moz-placeholder{
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;    
+    font-weight: bold;
+    color:green;
+    opacity: 0.4;
+    
+}
+
+input.input::-webkit-input-placeholder {
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;    
+    font-weight: bold;
+    color:green;
+    opacity: 0.4;
+    
+}
+*/

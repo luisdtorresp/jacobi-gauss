@@ -4,46 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metodos Iterativos</title>
-    <script src="./JacobiGaussSeidel.js" defer></script>
+    
+    <link rel="stylesheet" href="./res/css/bulma.min.css">
+    
+    <link rel="stylesheet" href="./res/css/style.css">
+    <script src="./res/js/JacobiGaussSeidel.js" defer></script>
 </head>
 <body>
-    <h2>Metodos de Jacobi y Gauss-Seidel</h2>
-    <hr>
-    <div id="div-jacobi">
-        <span>Método de Jacobi  </span><div id="jacobi" class="resultados"></div>
-    </div>    
-    <div id="div-gaussSeidel">
-        <span>Método de Gauss-Seidel</span><div id="gauss" class="resultados"></div>
+    <section class="section">
+    <div class="container">
+        
+        <h1 class="title is-size-1">
+            Métodos de Jacobi y Gauss-Seidel
+        </h1>
+        <p class="subtitle">
+            Métodos iterativos para resolver sistemas de ecuaciones lineales.
+        </p>
+        <div class="columns box">
+            <div class="column is-two-thirds">
+                <div class="message">
+                    <span class="title is-size-4">Parametros para los metodos:</span>
+                    <div class="control">
+                        
+                        <label for="num_ec">Numero de ecuaciones:</label>
+                        <input class="input parametro" type="number" name="num_ec" id="" min="2" max="10" placeholder="2">
+                        <label for="v_inicial">Vector Inicial:</label>
+                        <input class="input parametro" type="text" placeholder="(0,0,0,0)" name="v_inicial">
+                        <label for="epsilon"> Precisión: 10^</label>
+                        <input class="input parametro" type="number" name="epsilon" id="" min="-20" max="-1" placeholder="-1" value="-3">
+                        
+                    </div>
+                </div>
+                <h3 class="title is-size-4 has-text-centered">Matriz del Sistema de Ecuaciones</h3>
+                <div id="matrizA" class="message">
+                
+                    <div class="field is-grouped-centered">
+                        <div class="control has-text-centered">
+                            <input class="input is-2 has-text-centered" type="text" placeholder="a&#8321;&#8321;">
+                            <input class="input is-2 has-text-centered" type="text" placeholder="a&#8321;&#8322;">
+                            <input class="input is-2 has-text-centered" type="text" placeholder="a&#8321;&#8323;">
+                        </div>
+                        <div class="control has-text-centered">
+                          <input class="input is-2 has-text-centered" type="text" placeholder="a&#8322;&#8321;">
+                          <input class="input is-2 has-text-centered" type="text" placeholder="a&#8322;&#8322;">
+                          <input class="input is-2 has-text-centered" type="text" placeholder="a&#8322;&#8323;">
+            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="column message">
+                <div class="message-header is-size-6 has-text-centered">Info</div>
+                <div class="message-body"></div>
+            </div>
+        </div>
+          
+        <div class="columns is-multiline box">
+            <div class="column is-12">
+
+                <div class="message">
+                    <div class="title is-size-4">Iteraciones:</div>
+                    <div class="control">
+                        <label for="numiter">Numero maximo de iteraciones: </label>
+                        <input class="" type="number" name="numiter" id="" min="1" max="200" value="99">
+                        <label for="numitermostrar">Numero de iteraciones a mostrar: </label>
+                        <input class="" type="number" name="numitermostrar" id="" min="1" max="200" value="4">
+                    </div>
+                        
+                </div>
+                
+            </div>
+            
+            <div id="div-jacobi" class="column has-text-centered">
+                <h4 class="title is-bold">Método de Jacobi</h4>
+                <div id="jacobi" class="resultados"></div>
+            </div>    
+            <div id="div-gaussSeidel" class="column has-text-centered">
+                <h4 class="title is-bold">Método de Gauss-Seidel</h4>
+                <div id="gauss" class="resultados"></div>
+            </div>
+            
+        </div>            
+        
     </div>
+    </section>
+
+
 </body>
-<style>
-
-    html{
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    h2{
-        text-align: center;
-    }
-
-    div{
-        margin: auto;
-        width: 30%;
-        /*border: .3rem solid gray;*/
-        border-radius: 2rem;
-    }
-    
-    .resultados{
-        box-sizing: border-box;
-        width: 100%;
-        padding: 1.3em;
-        border: 1pt solid green;
-    }
-
-    span{
-        margin: 2em 0;
-        padding-bottom: 2em;
-        text-align: center;
-    }
-</style>
 </html>

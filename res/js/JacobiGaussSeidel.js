@@ -59,7 +59,7 @@ var maxIteraciones = 200;
 var iteraciones = 0;
 
 //expError
-epsilon = 1e-3;
+epsilon = 1e-12;
 
 
 
