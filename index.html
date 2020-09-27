@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./res/css/bulma.min.css">
     
     <link rel="stylesheet" href="./res/css/style.css">
-    <script src="./res/js/JacobiGaussSeidel.js" defer></script>
+    
 </head>
 <body>
     <section class="section">
@@ -27,49 +27,42 @@
                     <div class="control">
                         
                         <label for="num_ec">Numero de ecuaciones:</label>
-                        <input class="input parametro" type="number" name="num_ec" id="" min="2" max="10" placeholder="2">
+                        <input class="input parametro" type="number" name="num_ec" id="numecuaciones" min="2" max="9" placeholder="2">
+                        <input id="crearMatriz" class="button is-success has-background-success-dark" type="button" value="Crear Matriz">
                         <label for="v_inicial">Vector Inicial:</label>
-                        <input class="input parametro" type="text" placeholder="(0,0,0,0)" name="v_inicial">
+                        <input id="vectorinicial" class="input parametro" type="text" placeholder="(0,0,0,0)" name="v_inicial">
                         <label for="epsilon"> Precisión: 10^</label>
-                        <input class="input parametro" type="number" name="epsilon" id="" min="-20" max="-1" placeholder="-1" value="-3">
-                        
+                        <input class="input parametro" type="number" name="epsilon" id="epsilon" min="-20" max="-1" placeholder="-1" value="-3">
+                        <input id="calcular" class="button is-info has-background-info-dark" type="button" value="Calcular">
                     </div>
                 </div>
                 <h3 class="title is-size-4 has-text-centered">Matriz del Sistema de Ecuaciones</h3>
                 <div id="matrizA" class="message">
                 
-                    <div class="field is-grouped-centered">
-                        <div class="control has-text-centered">
-                            <input class="input is-2 has-text-centered" type="text" placeholder="a&#8321;&#8321;">
-                            <input class="input is-2 has-text-centered" type="text" placeholder="a&#8321;&#8322;">
-                            <input class="input is-2 has-text-centered" type="text" placeholder="a&#8321;&#8323;">
-                        </div>
-                        <div class="control has-text-centered">
-                          <input class="input is-2 has-text-centered" type="text" placeholder="a&#8322;&#8321;">
-                          <input class="input is-2 has-text-centered" type="text" placeholder="a&#8322;&#8322;">
-                          <input class="input is-2 has-text-centered" type="text" placeholder="a&#8322;&#8323;">
-            
-                        </div>
-                    </div>
+                    <!-- Se llena cpn Celdas creadas con JS-->
 
                 </div>
             </div>
-            <div class="column message">
+            <div class="column message is-desktop">
                 <div class="message-header is-size-6 has-text-centered">Info</div>
-                <div class="message-body"></div>
+                <div class="message-body">
+                    <div id="resultadositer">
+
+                    </div>
+                </div>
             </div>
         </div>
           
         <div class="columns is-multiline box">
-            <div class="column is-12">
+            <div class="column is-full">
 
                 <div class="message">
                     <div class="title is-size-4">Iteraciones:</div>
                     <div class="control">
                         <label for="numiter">Numero maximo de iteraciones: </label>
-                        <input class="" type="number" name="numiter" id="" min="1" max="200" value="99">
-                        <label for="numitermostrar">Numero de iteraciones a mostrar: </label>
-                        <input class="" type="number" name="numitermostrar" id="" min="1" max="200" value="4">
+                        <input class="" type="number" name="numiter" id="maxiteraciones" min="1" max="200" value="99">
+                        <label for="numiteramostrar">Numero de iteraciones a mostrar: </label>
+                        <input class="" type="number" name="numiteramostrar" id="numiteramostrar" min="1" max="200" value="4">
                     </div>
                         
                 </div>
@@ -90,6 +83,7 @@
     </div>
     </section>
 
-
+    <script src="./res/js/JacobiGaussSeidel.js" defer></script>
 </body>
+
 </html>
