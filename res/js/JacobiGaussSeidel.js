@@ -1,6 +1,9 @@
+function validarFraccion(num){
+	return +num.split("/").reduce((a,b) => a/(+b||1))
+	
+}
 
-
-function crearMatrizCuadrada( numEcuacionesDin ){
+function crearMatrizCuadrada( numEcuacionesDin){
     if (numEcuacionesDin >= 2 && numEcuacionesDin <= 50) { 
         var matrizADinamica = new Array(numEcuacionesDin)
         for (let filaDinamica = 0; filaDinamica < matrizADinamica.length; filaDinamica++){        
@@ -12,18 +15,19 @@ function crearMatrizCuadrada( numEcuacionesDin ){
         for(let i = 0; i < numEcuacionesDin; i++){
             for (let j = 0; j < numEcuacionesDin; j++){
                 let celda = document.getElementById(`celdaA${i+1}${j+1}`)
-                if (celda.value == "" || celda.value == null || celda.value == undefined){
-                    celda.value = 0;                    
+                if (celda.value == "" || celda.value == null || celda.value == undefined || celda.value.isNaN || celda.value == "NaN" ){
+                    celda.value = 0 ;                    
                 } else {
                     try {
-                        valorcelda = eval(celda.value)                              // CORREGIR VALIDACION !!!
+                        valorcelda = validarFraccion(celda.value)                              // CORREGIR VALIDACION !!!
 
                     } catch (error) {
                         console.error("Se genero un error:" + error)
                         alert("error: "+ error)
                     }
                 }
-                matrizADinamica[i][j] = parseFloat(celda.value)
+                celda.value = parseFloat(validarFraccion(celda.value))
+                matrizADinamica[i][j] = parseFloat(validarFraccion(celda.value))
             }
         }
         return matrizADinamica;
@@ -84,6 +88,7 @@ function crearInputMatriz(){
             celdaCoef.className = "input is-2 has-text-centered";
             celdaCoef.setAttribute("type","text");
             celdaCoef.setAttribute("id",`celdaA${i}${j}`)
+            celdaCoef.setAttribute("pattern","^-?\\d+(?:\\.\\d+|\\/\\d+)?$")
             celdaCoef.setAttribute("placeholder", `a${eval("'"+uncFila+"'")}${eval("'"+uncColumna+"'")}`);
             //celdaCoef.setAttribute("value","0");
             filaMatriz.appendChild(celdaCoef);
@@ -93,6 +98,7 @@ function crearInputMatriz(){
         let celdaMatrizB = document.createElement("input");
         celdaMatrizB.className = "input ml-5 has-text-centered";
         celdaMatrizB.setAttribute("id",`celdaB${i}`)
+        celdaMatrizB.setAttribute("pattern","^-?\\d+(?:\\.\\d+|\\/\\d+)?$")
         celdaMatrizB.setAttribute("placeholder", `b${eval("'"+uncFila+"'")}`);
         filaMatriz.appendChild(celdaMatrizB);
 
@@ -180,7 +186,8 @@ function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIte
 function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIteraciones){
 
     //var vectorXInicial = [0,0,0,0];
-    var vectorXResultado = [0,0,0,0];
+    var vectorXResultado = new Array(numEcuaciones);
+    vectorXResultado = [0]
     var iteraciones = 1;
     var textGauss = document.getElementById("gauss")
     
@@ -345,7 +352,35 @@ function ordenarMatrizDominante(numEcuaciones, matrizA, matrizB){
 
 }
 
-
+function crearVectorInicial(entrada, numEcuaciones){
+	var vector = entrada.value.split(",")
+	var arr = new Array(numEcuaciones)
+	for (let i = 0; i<numEcuaciones; i++){ arr[i] = 0;}
+	if ( vector.length === 1 && vector[0] == ""){
+		//for (let i = 0; i<numEcuaciones; i++){ arr[i] = 0;}
+		entrada.value = arr;
+		return arr;
+	} else {
+		
+		for (let i = 0; i<numEcuaciones; i++){
+			try {
+				if ( vector[i] =="" || vector[i] == null || vector[i].isNaN || vector[i] == undefined){ arr[i] = 0; }
+				else { arr[i] = parseFloat(vector[i])}
+			} catch(error){
+	/*			if(error === ReferenceError){ 
+					arr[i] = 0;
+					
+					console.log("El vetor inicial ingresado es menor al numero de ecuaciones, se completó con ceros")
+					
+				}*/
+				console.log(error)
+			}
+		}
+		entrada.value = arr;
+		return	arr 
+		
+	}
+}
 
 
 //========================  MAIN  function ============================
@@ -375,7 +410,11 @@ calcular.addEventListener("click",
 */
 
     var inputVectorInicial = document.getElementById("vectorinicial");
-    var vectorInicial = [0,0,0,0];
+    var vectorInicial = crearVectorInicial(inputVectorInicial, numeroEcuaciones);
+    console.log(vectorInicial);
+    //var vectorInicial = [0,0,0,0];
+    //console.log(vectorISeparado);
+    //var vectorInicial = vectorISeparado.map();
 
    // var matrizSolucion = [21,-11,-7,5];
 
