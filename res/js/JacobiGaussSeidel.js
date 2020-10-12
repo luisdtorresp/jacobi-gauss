@@ -142,11 +142,14 @@ function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIte
             if (errorAprox > epsilon) break;
             aproximados++;
             if (aproximados == numEcuaciones) {
-
+				
+				
                 //IMPRIME RESULTADOS EN LA PAGINA
-                textJacobi.innerText = `Vector Solucion obtenido en ${iteraciones} iteraciones:`
-                vectorXResultado.forEach(xres => {
-                    textJacobi.innerText += "\n" + xres.toFixed(4)    
+                textResultados.innerText = "====== METODO JACOBI ======";
+                textResultados.innerText += `\nVector Solucion obtenido en ${iteraciones-1} iteraciones:`
+                vectorXResultado.forEach((xres,i) => {
+					let subindice = "\\u208"+ (i+1).toString()
+                    textResultados.innerText += "\n" +`X${eval("'"+subindice+"'")}`+" =\t "+ xres.toFixed(4)    
                 });
                 console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado}`)
                 return vectorXResultado;
@@ -156,8 +159,8 @@ function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIte
         if (iteraciones <= numiteramostrar){
             
             console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n(${vectorXResultado.map( x => {return x.toFixed(4)})})\n`)
-            if (iteraciones <= 1) textResultados.innerText = "============ METODO JACOBI =============";
-            textResultados.innerText +=`\nIteracion ${iteraciones}:\n(${vectorXResultado.map( x => {return x.toFixed(4)})})\n`
+            if (iteraciones <= 1) textJacobi.innerText = "";
+            textJacobi.innerText +=`Iteración ${iteraciones}:\n(${vectorXResultado.map( x => {return x.toFixed(4)})})\n`
             /*
             vectorXResultado.forEach(xres => {
                 textResultados.innerText += "\n" + xres.toFixed(4)    
@@ -183,13 +186,14 @@ function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIte
 }
 
 
-function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIteraciones){
+function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIteraciones, numiteramostrar = 4){
 
     //var vectorXInicial = [0,0,0,0];
     var vectorXResultado = new Array(numEcuaciones);
     vectorXResultado = [0]
     var iteraciones = 1;
     var textGauss = document.getElementById("gauss")
+    var textResultados = document.getElementById("resultadositer")
     
       while (iteraciones <= maxIteraciones) {
         //vectorXResultado = vectorXInicial.slice()
@@ -226,16 +230,26 @@ function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, m
             if (aproximados == numEcuaciones) {
 
                 //IMPRIME RESULTADOS EN LA PAGINA
-                textGauss.innerText = `Vector Solucion obtenido en ${iteraciones} iteraciones:`
-                vectorXResultado.forEach(element => {
-                textGauss.innerText += "\n" + element.toFixed(4)       
+                textResultados.innerText += "\n\n====== METODO GAUSS-SEIDEL ======";
+                textResultados.innerText += `\nVector Solucion obtenido en ${iteraciones-1} iteraciones:`
+                vectorXResultado.forEach((xres,i) => {
+					let subindice = "\\u208"+ (i+1).toString()
+                    textResultados.innerText += "\n" +`X${eval("'"+subindice+"'")}`+" =\t "+ xres.toFixed(4)    
                 });
                 console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado}`)
                 return vectorXResultado;
             }
         }
+        
+        if (iteraciones <= numiteramostrar){
+            
+            console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n(${vectorXResultado.map( x => {return x.toFixed(4)})})\n`)
+            if (iteraciones <= 1) textGauss.innerText = "";
+            textGauss.innerText +=`Iteración ${iteraciones}:\n(${vectorXResultado.map( x => {return x.toFixed(4)})})\n`
+           
+        }
     
-        if (iteraciones <= 4){console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado.map( x => {return x.toFixed(4)})}`)}
+        
         vectorXInicial = vectorXResultado.slice();
         iteraciones++;
   
@@ -430,6 +444,13 @@ calcular.addEventListener("click",
 
     var inputnumiteramostrar = document.getElementById("numiteramostrar");
     numIteraciones = parseInt(inputnumiteramostrar.value)
+    
+    var textResultados = document.getElementById("resultadositer")
+    textResultados.innerText = ""
+    var textJacobi = document.getElementById("jacobi")
+    textJacobi.innerText = ""
+    var textGauss = document.getElementById("gauss")
+    textGauss.innerText = ""
  // ===================================================
 
     matrizAOriginal = crearMatrizCuadrada(numeroEcuaciones)
@@ -439,7 +460,7 @@ calcular.addEventListener("click",
     
         resultadoJacobi = jacobi(numeroEcuaciones, matrizAOriginal, matrizSolucion, vectorInicial, epsilonPrecision, maxIteraciones, numIteraciones);
         console.log(resultadoJacobi)
-        resultadoGauss = gaussSeidel(numeroEcuaciones, matrizAOriginal, matrizSolucion, vectorInicial, epsilonPrecision, maxIteraciones);
+        resultadoGauss = gaussSeidel(numeroEcuaciones, matrizAOriginal, matrizSolucion, vectorInicial, epsilonPrecision, maxIteraciones, numIteraciones);
         console.log(resultadoGauss)
     
     } else { 
@@ -447,7 +468,7 @@ calcular.addEventListener("click",
         console.log("MATRIZ ORDENADA!\n")
         resultadoJacobi = jacobi(numeroEcuaciones, matrizOrdenada.mA, matrizOrdenada.mB, vectorInicial, epsilonPrecision, maxIteraciones, numIteraciones);
         console.log(resultadoJacobi)
-        resultadoGauss = gaussSeidel(numeroEcuaciones, matrizOrdenada.mA, matrizOrdenada.mB, vectorInicial, epsilonPrecision, maxIteraciones);
+        resultadoGauss = gaussSeidel(numeroEcuaciones, matrizOrdenada.mA, matrizOrdenada.mB, vectorInicial, epsilonPrecision, maxIteraciones, numIteraciones);
         console.log(resultadoGauss)
     
     }

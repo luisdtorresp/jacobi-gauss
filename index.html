@@ -1,40 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es-ve" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metodos Iterativos</title>
+    <title>Métodos Iterativos</title>
     
     <link rel="stylesheet" href="./res/css/bulma.min.css">
     
     <link rel="stylesheet" href="./res/css/style.css">
     
 </head>
-<body>
+<body >
+	
+	<section class="hero is-light">
+	<div class="container hero-body is-bold">
+			<h1 class="title is-size-1">
+				Algoritmos de Jacobi y Gauss-Seidel
+			</h1>
+			<p class="subtitle">
+				 Métodos iterativos para resolver sistemas de ecuaciones lineales.
+			</p>
+    </div>
+	</section>
     <section class="section">
-    <div class="container">
+    <div class="container ">
         
-        <h1 class="title is-size-1">
-            Métodos de Jacobi y Gauss-Seidel
-        </h1>
-        <p class="subtitle">
-            Métodos iterativos para resolver sistemas de ecuaciones lineales.
-        </p>
-        <div class="columns box">
+        <div class="columns box has-background-light">
             <div class="column is-two-thirds">
-                <div class="message">
-                    <span class="title is-size-4">Parametros para los metodos:</span>
-                    <div class="control">
+                <div class="message has-text-centered">
+                    <div class="title is-size-4 px-6 pt-3">Parámetros para los métodos:</div>
+                    <div class="columns is-multiline">
+									
+						<div class="field column is-one-third">
+							<label class="is-normal field-label" for="num_ec">N° de ecuaciones:</label>
+							
+								<input class="input parametro" type="number" name="num_ec" id="numecuaciones" min="2" max="9" placeholder="2">
+								<input id="crearMatriz" class="button is-success has-background-success-dark" type="button" value="Crear Matriz">
+							
+						</div>
                         
-                        <label for="num_ec">Numero de ecuaciones:</label>
-                        <input class="input parametro" type="number" name="num_ec" id="numecuaciones" min="2" max="9" placeholder="2">
-                        <input id="crearMatriz" class="button is-success has-background-success-dark" type="button" value="Crear Matriz">
-                        <label for="v_inicial">Vector Inicial:</label>
-                        <input id="vectorinicial" class="input parametro" type="text" placeholder="(0,0,0,0)" name="v_inicial">
-                        <label for="epsilon"> Precisión: 10^</label>
-                        <input class="input parametro" type="number" name="epsilon" id="epsilon" min="-20" max="-1" placeholder="-1" value="-3">
-                        <input id="calcular" class="button is-info has-background-info-dark" type="button" value="Calcular">
+   						<div class="field column is-one-third ">
+							
+							<label class="field-label is-normal" for="v_inicial">Vector Inicial:</label>	
+							<div class="control">
+								<input id="vectorinicial" class="input parametro" type="text" placeholder="(0,0,0,0)" name="v_inicial">
+							</div>
+								
+						</div>
+
+						<div class="field column is-one-quarter ">
+							<label class="field-label is-normal" for="epsilon"> Precisión: 10^</label>
+	
+							<div class="control">
+								<input class="input parametro" type="number" name="epsilon" id="epsilon" min="-20" max="-1" placeholder="-1" value="-3">			
+							</div>								
+		
+						</div>
+
+                        <div class="control column">
+							<input id="calcular" class="button is-large is-info has-background-link" type="button" value="Calcular">	
+                        </div>
+                        
+						
                     </div>
+                    
+						
+                    
                 </div>
                 <h3 class="title is-size-4 has-text-centered">Matriz del Sistema de Ecuaciones</h3>
                 <div id="matrizA" class="message">
@@ -43,9 +74,9 @@
 
                 </div>
             </div>
-            <div class="column message is-desktop">
-                <div class="message-header is-size-6 has-text-centered">Info</div>
-                <div class="message-body">
+            <div class="column message is-link is-desktop">
+                <div class="message-header is-size-6 has-text-centered">Resultados</div>
+                <div class="message-body has-text-centered">
                     <div id="resultadositer">
 
                     </div>
@@ -53,30 +84,34 @@
             </div>
         </div>
           
-        <div class="columns is-multiline box">
+        <div class="columns is-multiline box has-background-light">
             <div class="column is-full">
 
                 <div class="message">
-                    <div class="title is-size-4">Iteraciones:</div>
-                    <div class="control">
-                        <label for="numiter">Numero maximo de iteraciones: </label>
-                        <input class="" type="number" name="numiter" id="maxiteraciones" min="1" max="200" value="99">
-                        <label for="numiteramostrar">Numero de iteraciones a mostrar: </label>
-                        <input class="" type="number" name="numiteramostrar" id="numiteramostrar" min="1" max="200" value="4">
+                    <div class="title is-size-4 pl-6 pt-3">Iteraciones:</div>
+                    <div class="control has-text-centered">
+						
+						<label class="field-label" for="numiter">Numero máximo de iteraciones: </label>
+						<input class="input " type="number" name="numiter" id="maxiteraciones" min="1" max="200" value="99">
+					
+						<label class="field-label" for="numiteramostrar">Numero de iteraciones a mostrar: </label>
+						<input class="input" type="number" name="numiteramostrar" id="numiteramostrar" min="1" max="200" value="4">
+					
+                        
                     </div>
                         
                 </div>
                 
             </div>
             
-            <div id="div-jacobi" class="column has-text-centered">
-                <h4 class="title is-bold">Método de Jacobi</h4>
-                <div id="jacobi" class="resultados"></div>
-            </div>    
-            <div id="div-gaussSeidel" class="column has-text-centered">
-                <h4 class="title is-bold">Método de Gauss-Seidel</h4>
-                <div id="gauss" class="resultados"></div>
-            </div>
+				<div id="div-jacobi" class="column has-text-centered">
+					<h4 class="title is-size-4 ">Método de Jacobi</h4>
+					<div id="jacobi" class="resultados"></div>
+				</div>    
+				<div id="div-gaussSeidel" class="column has-text-centered">
+					<h4 class="title is-size-4">Método de Gauss-Seidel</h4>
+					<div id="gauss" class="resultados"></div>
+				</div>
             
         </div>            
         
