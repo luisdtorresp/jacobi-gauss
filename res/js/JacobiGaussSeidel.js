@@ -1,25 +1,67 @@
-function validarFraccion(num){
+function validarFraccion(num){		// Interpreta numeros racionales en la entrada y devuelve el decimal 
 	return +num.split("/").reduce((a,b) => a/(+b||1))
 	
 }
 
-function crearMatrizCuadrada( numEcuacionesDin){
+function crearInputMatriz(){ 	//Crea dinamicamente los campos de entrada para los datos del sistema de ecuaciones
+
+    var inputNumEc = document.getElementById("numecuaciones");
+    var numEcuaciones = parseInt(inputNumEc.value);
+
+    var divMatrizA = document.getElementById("matrizA");
+    divMatrizA.innerHTML = ""  //Reinicia el espacio para los campos de entrada
+    
+    for (let i = 1; i <= numEcuaciones; i++){  // Ciclo en el que se crean los nuevos elementos html
+        
+        let uncFila = "\\u208"+ i.toString() 		// Genera el codigo unicode para los subindices 
+
+        let filaMatriz = document.createElement("div");
+        filaMatriz.className = "control has-text-centered";
+
+        for (let j = 1; j <= numEcuaciones; j++){
+           
+            let uncColumna = "\\u208"+ j.toString()  // Genera el codigo unicode para los subindices 
+            
+            let celdaCoef = document.createElement("input");	// Objeto que se agrega al html
+            celdaCoef.className = "input is-2 has-text-centered";
+            celdaCoef.setAttribute("type","text");
+            celdaCoef.setAttribute("id",`celdaA${i}${j}`)
+            celdaCoef.setAttribute("pattern","^-?\\d+(?:\\.\\d+|\\/\\d+)?$")	// validacion html para ingresar fracciones o decimales
+            celdaCoef.setAttribute("placeholder", `a${eval("'"+uncFila+"'")}${eval("'"+uncColumna+"'")}`);	//Indicativo de los coeficientes
+            filaMatriz.appendChild(celdaCoef);
+
+        }
+
+        let celdaMatrizB = document.createElement("input"); 	// Objeto que se agrega al html
+        celdaMatrizB.className = "input ml-5 has-text-centered";
+        celdaMatrizB.setAttribute("id",`celdaB${i}`)
+        celdaMatrizB.setAttribute("pattern","^-?\\d+(?:\\.\\d+|\\/\\d+)?$")
+        celdaMatrizB.setAttribute("placeholder", `b${eval("'"+uncFila+"'")}`);
+        filaMatriz.appendChild(celdaMatrizB);
+
+        divMatrizA.appendChild(filaMatriz);
+
+    }
+
+}
+
+function crearMatrizCuadrada( numEcuacionesDin){   //Crea arreglo bidimensional y asigna valores que representan la matriz de coeficientes del sistema de ecuaciones
     if (numEcuacionesDin >= 2 && numEcuacionesDin <= 50) { 
         var matrizADinamica = new Array(numEcuacionesDin)
-        for (let filaDinamica = 0; filaDinamica < matrizADinamica.length; filaDinamica++){        
+        for (let filaDinamica = 0; filaDinamica < matrizADinamica.length; filaDinamica++){  // Crea el arreglo bidimensional para los coeficientes de la matriz 
             for (let columnaDinamica = 0; columnaDinamica < matrizADinamica.length; columnaDinamica++){
                 matrizADinamica[filaDinamica] = new Array(numEcuacionesDin)
             }
         }
 
-        for(let i = 0; i < numEcuacionesDin; i++){
+        for(let i = 0; i < numEcuacionesDin; i++){   // Lee los valores en los inputs creados en la pagina y los asigna al arreglo
             for (let j = 0; j < numEcuacionesDin; j++){
                 let celda = document.getElementById(`celdaA${i+1}${j+1}`)
                 if (celda.value == "" || celda.value == null || celda.value == undefined || celda.value.isNaN || celda.value == "NaN" ){
                     celda.value = 0 ;                    
                 } else {
                     try {
-                        valorcelda = validarFraccion(celda.value)                              // CORREGIR VALIDACION !!!
+                        valorcelda = validarFraccion(celda.value)      // Validacion simple para admitir entrada como decimal o fracción
 
                     } catch (error) {
                         console.error("Se genero un error:" + error)
@@ -37,17 +79,17 @@ function crearMatrizCuadrada( numEcuacionesDin){
     }
 }
 
-function crearMatrizB(numEcuacionesDin){
+function crearMatrizB(numEcuacionesDin){ // Crea arreglo y asigna los valores para el vector columna de coeficientes independientes
     if (numEcuacionesDin >= 2 && numEcuacionesDin <= 50) { 
         var matrizBDinamica = new Array(numEcuacionesDin)
 
-        for (let fila = 0; fila < numEcuacionesDin; fila++){
+        for (let fila = 0; fila < numEcuacionesDin; fila++){  //Lee los datos de input en el html
             let celda = document.getElementById(`celdaB${fila+1}`)
                 if (celda.value == "" || celda.value == null || celda.value == undefined){
                     celda.value = 0;                    
                 } else {
                     try {
-                        valorcelda = eval(celda.value)                              // CORREGIR VALIDACION !!!
+                        valorcelda = parseFloat(validarFraccion(celda.value))
 
                     } catch (error) {
                         console.error("Se genero un error:" + error)
@@ -64,60 +106,137 @@ function crearMatrizB(numEcuacionesDin){
     }    
 }
 
-function crearInputMatriz(){
 
-    var inputNumEc = document.getElementById("numecuaciones");
-    var numEcuaciones = parseInt(inputNumEc.value);
-
-    var divMatrizA = document.getElementById("matrizA");
-    divMatrizA.innerHTML = ""
-    for (let i = 1; i <= numEcuaciones; i++){
+function matrizDominante(numEcuaciones, matrizA) { // Verifica si la matriz dada es dominante
+    let dominante = 0;
+    for (let i = 0; i < numEcuaciones; i++){
         
-        let uncFila = "\\u208"+ i.toString()
+        let sumatoria = 0;
+        for (let j = 0; j < numEcuaciones; j++){ 
+            if (i !== j){
+                sumatoria += Math.abs(matrizA[i][j])
+            }
+        }
+        if (Math.abs(matrizA[i][i]) < sumatoria) break;  //diagonal estrictamente dominante
+        dominante++;
+        if (dominante == numEcuaciones) {
+            console.log("La matriz dada SI es diagonalmente dominante.")
+            return true
+        }
+        
+    }
+    console.log("La matriz dada no es diagonalmente dominante.")
+    return false
+}
 
-        let filaMatriz = document.createElement("div");
-        filaMatriz.className = "control has-text-centered";
 
-        for (let j = 1; j <= numEcuaciones; j++){
+function elementosDominante(numEcuaciones, matrizA){	//Devuelve un arreglo con coeficientes a evaluar
+	// Funcion auxiliar para ordenar una matriz cuadrada para que sea dominante
 
-           
-            uncColumna = "\\u208"+ j.toString()
-            
+    var indicesDominantes =  new Array(numEcuaciones)
+    
+    for (let row = 0; row < numEcuaciones; row++){
+    let mayor = Math.abs(matrizA[row][0])
+    let suma = 0
+    
+        for( let col = 0; col < numEcuaciones; col++){
+            if (Math.abs(matrizA[row][col]) >= mayor){
+                mayor = Math.abs(matrizA[row][col])
+                indicesDominantes[row] = col
 
-            let celdaCoef = document.createElement("input");
-            celdaCoef.className = "input is-2 has-text-centered";
-            celdaCoef.setAttribute("type","text");
-            celdaCoef.setAttribute("id",`celdaA${i}${j}`)
-            celdaCoef.setAttribute("pattern","^-?\\d+(?:\\.\\d+|\\/\\d+)?$")
-            celdaCoef.setAttribute("placeholder", `a${eval("'"+uncFila+"'")}${eval("'"+uncColumna+"'")}`);
-            //celdaCoef.setAttribute("value","0");
-            filaMatriz.appendChild(celdaCoef);
-
+            }
+        
+            suma += Math.abs(matrizA[row][col])
         }
 
-        let celdaMatrizB = document.createElement("input");
-        celdaMatrizB.className = "input ml-5 has-text-centered";
-        celdaMatrizB.setAttribute("id",`celdaB${i}`)
-        celdaMatrizB.setAttribute("pattern","^-?\\d+(?:\\.\\d+|\\/\\d+)?$")
-        celdaMatrizB.setAttribute("placeholder", `b${eval("'"+uncFila+"'")}`);
-        filaMatriz.appendChild(celdaMatrizB);
-
-        divMatrizA.appendChild(filaMatriz);
-
+        if (mayor < suma-mayor) return indicesDominantes.slice();
     }
 
+    return indicesDominantes.slice();
 
 }
 
-function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIteraciones, numiteramostrar = 4){
+function indicesUnicos(arrayIndices){	// Comprueba si los coeficientes por columna no se repiten
+	// Funcion auxiliar para ordenar una matriz cuadrada para que sea dominante
+    
+    for (let i = 0; i < arrayIndices.length; i++){
+        for ( let j = i+1; j < arrayIndices.length; j++){
+            if (arrayIndices[i] === arrayIndices[j]) return false;
+        }
+    }
+
+    return true
+
+}
+
+
+function ordenarMatrizDominante(numEcuaciones, matrizA, matrizB){  	//Ordena de ser posible la matriz dada en una dominante
+
+    indicesAOrdenar = elementosDominante(numEcuaciones ,matrizA)		// El arreglo devuelto indica cual es el orden de las filas
+
+    if (indicesUnicos(indicesAOrdenar)){
+        var auxMatrizA = matrizA.slice()
+        var auxMatrizB = matrizB.slice()
+
+        for (let i = 0; i < numEcuaciones; i++){
+            auxMatrizA[indicesAOrdenar[i]] = matrizA[i].slice()
+            auxMatrizB[indicesAOrdenar[i]] = matrizB[i]
+        }
+        
+        matrices = {
+            mA : auxMatrizA.slice(),
+            mB : auxMatrizB.slice()
+        }
+
+        return matrices
+
+    } else {
+        alert("La Matriz dada no puede ser ordena dominante por fila")
+        console.log("La Matriz dada no puede ser ordena dominante por fila")
+    }
+
+}
+
+function crearVectorInicial(entrada, numEcuaciones){	// Lee del campo input los valores separados por comas y asigna al vector inicial
+	var vector = entrada.value.split(",")
+	var arr = new Array(numEcuaciones)
+	for (let i = 0; i<numEcuaciones; i++){ arr[i] = 0;}
+	if ( vector.length === 1 && vector[0] == ""){
+		
+		entrada.value = arr;
+		return arr;
+	} else {
+		
+		for (let i = 0; i<numEcuaciones; i++){
+			try {
+				if ( vector[i] =="" || vector[i] == null || vector[i].isNaN || vector[i] == undefined){ arr[i] = 0; }
+				else { arr[i] = parseFloat(vector[i])}
+			} catch(error){
+	
+				console.log(error)
+			}
+		}
+		entrada.value = arr;
+		return	arr 
+		
+	}
+}
+
+
+
+function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIteraciones, numiteramostrar){		//Implementacion del algoritmo de Jacobi
+    
+    /* Utiliza elementos del documento html para mostrar los resultados finales y en cada iteracion.
+     * Asume una matriz cuadrada diagonalmente dominante
+     * */        
+    
     var textJacobi = document.getElementById("jacobi")
     var textResultados = document.getElementById("resultadositer")
-    
-    //var vectorXInicial = [0,0,0,0];
+        
     var vectorXResultado = new Array(numEcuaciones);
     vectorXResultado = [0]
     var iteraciones = 1;
-    while (iteraciones <= maxIteraciones) {
+    while (iteraciones <= maxIteraciones) {    // Limita el numero de iteraciones en caso de no conseguir una solucion
         
         let fila = 0;        
         while (fila < numEcuaciones) {
@@ -125,30 +244,29 @@ function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIte
             let columna = 0;
             while (columna < numEcuaciones ) {
                 if (columna !== fila){
-                    //vectorXInicial.forEach( x => { 
-                    
+                 
                     suma += vectorXInicial[columna] * matrizA[fila][columna]
-                    //}); 
+   
                 }
                 columna++;            
             }
-            vectorXResultado[fila] = ((matrizB[fila]-suma)/matrizA[fila][fila]);
+            vectorXResultado[fila] = ((matrizB[fila]-suma)/matrizA[fila][fila]);	// Calcula el posible valor solución
             fila++;
         }    
         
         let aproximados = 0;
         for (let i = 0; i < vectorXResultado.length; i++){
-            let errorAprox = Math.abs(vectorXResultado[i] - vectorXInicial[i])
-            if (errorAprox > epsilon) break;
+            let errorAprox = Math.abs(vectorXResultado[i] - vectorXInicial[i])		
+            if (errorAprox > epsilon) break;		//Verifica si el vector solucion es lo suficientemente preciso
             aproximados++;
             if (aproximados == numEcuaciones) {
 				
 				
                 //IMPRIME RESULTADOS EN LA PAGINA
-                textResultados.innerText = "====== METODO JACOBI ======";
-                textResultados.innerText += `\nVector Solucion obtenido en ${iteraciones-1} iteraciones:`
-                vectorXResultado.forEach((xres,i) => {
-					let subindice = "\\u208"+ (i+1).toString()
+                textResultados.innerText = "__ MÉTODO JACOBI __";
+                textResultados.innerText += `\nVector Solución obtenido en ${iteraciones-1} iteraciones:`
+                vectorXResultado.forEach((xres,idx) => {
+					let subindice = "\\u208"+ (idx+1).toString()
                     textResultados.innerText += "\n" +`X${eval("'"+subindice+"'")}`+" =\t "+ xres.toFixed(4)    
                 });
                 console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado}`)
@@ -161,10 +279,7 @@ function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIte
             console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n(${vectorXResultado.map( x => {return x.toFixed(4)})})\n`)
             if (iteraciones <= 1) textJacobi.innerText = "";
             textJacobi.innerText +=`Iteración ${iteraciones}:\n(${vectorXResultado.map( x => {return x.toFixed(4)})})\n`
-            /*
-            vectorXResultado.forEach(xres => {
-                textResultados.innerText += "\n" + xres.toFixed(4)    
-            });*/
+            
         }
         
         vectorXInicial = vectorXResultado.slice();
@@ -176,19 +291,23 @@ function jacobi(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIte
 
     console.log ("No se alcanzo la convergencia!")
     console.log (`La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:\n${vectorXResultado}`)
-    textJacobi.innerText = `La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:`
-                vectorXResultado.forEach(element => {
-                    textJacobi.innerText += "\n" + element.toFixed(4)       
+    textJacobi.innerText += `\nLa ultima aproximacion al vector solución obtenida en ${iteraciones-1} iteraciones:`
+                vectorXResultado.forEach((element,idx) => {
+					let subindice = "\\u208"+ (idx+1).toString()
+                    textJacobi.innerText += "\n" +`X${eval("'"+subindice+"'")}`+" =\t "+ element.toFixed(4)    
                 });
-
+	
     return new Array(numEcuaciones);
 
 }
 
 
-function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIteraciones, numiteramostrar = 4){
+function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, maxIteraciones, numiteramostrar){  // Implementacion del Algoritmo de Gauss-Seidel
 
-    //var vectorXInicial = [0,0,0,0];
+     /* Utiliza elementos del documento html para mostrar los resultados finales y en cada iteracion.
+     * Asume una matriz cuadrada diagonalmente dominante
+     * */
+     
     var vectorXResultado = new Array(numEcuaciones);
     vectorXResultado = [0]
     var iteraciones = 1;
@@ -196,21 +315,12 @@ function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, m
     var textResultados = document.getElementById("resultadositer")
     
       while (iteraciones <= maxIteraciones) {
-        //vectorXResultado = vectorXInicial.slice()
+        
         let fila = 0;        
         while (fila < numEcuaciones) {
-            let suma1 = 0;
+            let suma1 = 0;		// De acuerdo al algoritmo se requieren dos variable para las sumatorias
             let suma2 = 0
-          /*let columna = 0;
-            while (columna < numEcuaciones ) {
-                if (columna === 1 ){
-                    suma += vectorXInicial[columna] * matrizA[fila][columna]
-                } else {
-                    suma += (vectorXResultado[columna]*matrizA[fila][columna]) (vectorXInicial[columna] * matrizA[fila][columna])
-                }
-                columna++;            
-            }*/
-
+          
             for (let columna = 0; columna <= fila-1; columna++){
                 suma1 += (vectorXResultado[columna]*matrizA[fila][columna])
             }
@@ -218,7 +328,7 @@ function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, m
             for (let columna = fila+1; columna < numEcuaciones; columna++){
                 suma2 += (vectorXInicial[columna]*matrizA[fila][columna])
             }
-            vectorXResultado[fila] = ((matrizB[fila]-suma1-suma2)/matrizA[fila][fila]);
+            vectorXResultado[fila] = ((matrizB[fila]-suma1-suma2)/matrizA[fila][fila]);		// Vector solucíon obtenido mejorando en cada ciclo
             fila++;
         }    
         
@@ -230,10 +340,10 @@ function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, m
             if (aproximados == numEcuaciones) {
 
                 //IMPRIME RESULTADOS EN LA PAGINA
-                textResultados.innerText += "\n\n====== METODO GAUSS-SEIDEL ======";
-                textResultados.innerText += `\nVector Solucion obtenido en ${iteraciones-1} iteraciones:`
-                vectorXResultado.forEach((xres,i) => {
-					let subindice = "\\u208"+ (i+1).toString()
+                textResultados.innerText += "\n\n__ MÉTODO GAUSS-SEIDEL __";
+                textResultados.innerText += `\nVector Solución obtenido en ${iteraciones-1} iteraciones:`
+                vectorXResultado.forEach((xres,idx) => {
+					let subindice = "\\u208"+ (idx+1).toString()
                     textResultados.innerText += "\n" +`X${eval("'"+subindice+"'")}`+" =\t "+ xres.toFixed(4)    
                 });
                 console.log (`Vector Solucion obtenido en ${iteraciones} iteraciones:\n${vectorXResultado}`)
@@ -259,186 +369,37 @@ function gaussSeidel(numEcuaciones, matrizA, matrizB, vectorXInicial, epsilon, m
   
       console.log ("No se alcanzo la convergencia!")
       console.log (`La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:\n${vectorXResultado}`)
-      textGauss.innerText = `La ultima aproximacion al vector solucion obtenida en ${iteraciones} iteraciones:`
-                  vectorXResultado.forEach(element => {
-                    textGauss.innerText += "\n" + element.toFixed(3)       
+      textGauss.innerText += `\nLa ultima aproximacion al vector solucion obtenida en ${iteraciones-1} iteraciones:`
+                  vectorXResultado.forEach((element,idx) => {
+					let subindice = "\\u208"+ (idx+1).toString()
+                    textGauss.innerText += "\n" +`X${eval("'"+subindice+"'")}`+" =\t "+ element.toFixed(4)    
                   });
 
     return new Array(numEcuaciones);
         
 }
 
-
-function matrizDominante(numEcuaciones, matrizA) {
-    let dominante = 0;
-    for (let i = 0; i < numEcuaciones; i++){
-        
-        let sumatoria = 0;
-        for (let j = 0; j < numEcuaciones; j++){ 
-            if (i !== j){
-                sumatoria += Math.abs(matrizA[i][j])
-            }
-        }
-        if (Math.abs(matrizA[i][i]) < sumatoria) break;  //diagonal debilmente dominante
-        dominante++;
-        if (dominante == numEcuaciones) {
-            console.log("La matriz dada SI es diagonalmente dominante.")
-            return true
-        }
-        
-    }
-    console.log("La matriz dada no es diagonalmente dominante.")
-    return false
-}
-
-
-function elementosDominante(numEcuaciones, matrizA){
-
-    var indicesDominantes =  new Array(numEcuaciones)
-    //let mayor = -1*Infinity
-    for (let row = 0; row < numEcuaciones; row++){
-    let mayor = Math.abs(matrizA[row][0])
-    let suma = 0
-    
-        for( let col = 0; col < numEcuaciones; col++){
-            if (Math.abs(matrizA[row][col]) >= mayor){
-                mayor = Math.abs(matrizA[row][col])
-                indicesDominantes[row] = col
-
-            }
-        
-            suma += Math.abs(matrizA[row][col])
-        }
-
-        if (mayor < suma-mayor) return indicesDominantes.slice();
-    }
-
-    return indicesDominantes.slice();
-
-}
-
-function indicesUnicos(arrayIndices){
-    
-    for (let i = 0; i < arrayIndices.length; i++){
-        for ( let j = i+1; j < arrayIndices.length; j++){
-            if (arrayIndices[i] === arrayIndices[j]) return false;
-        }
-    }
-
-    return true
-
-
-}
-
-
-function ordenarMatrizDominante(numEcuaciones, matrizA, matrizB){
-
-    indicesAOrdenar = elementosDominante(numEcuaciones ,matrizA)
-
-    if (indicesUnicos(indicesAOrdenar)){
-        var auxMatrizA = matrizA.slice()
-        var auxMatrizB = matrizB.slice()
-
-        for (let i = 0; i < numEcuaciones; i++){
-            auxMatrizA[indicesAOrdenar[i]] = matrizA[i].slice()
-            auxMatrizB[indicesAOrdenar[i]] = matrizB[i]
-        }
-        /*
-        matrizA = auxMatrizA.slice()
-        matrizB = auxMatrizB.slice()
-        */
-
-        matrices = {
-            mA : auxMatrizA.slice(),
-            mB : auxMatrizB.slice()
-        }
-
-        return matrices
-
-
-    } else {
-        alert("La Matriz dada no puede ser ordena dominante por fila")
-        console.log("La Matriz dada no puede ser ordena dominante por fila")
-    }
-
-    
-
-
-}
-
-function crearVectorInicial(entrada, numEcuaciones){
-	var vector = entrada.value.split(",")
-	var arr = new Array(numEcuaciones)
-	for (let i = 0; i<numEcuaciones; i++){ arr[i] = 0;}
-	if ( vector.length === 1 && vector[0] == ""){
-		//for (let i = 0; i<numEcuaciones; i++){ arr[i] = 0;}
-		entrada.value = arr;
-		return arr;
-	} else {
-		
-		for (let i = 0; i<numEcuaciones; i++){
-			try {
-				if ( vector[i] =="" || vector[i] == null || vector[i].isNaN || vector[i] == undefined){ arr[i] = 0; }
-				else { arr[i] = parseFloat(vector[i])}
-			} catch(error){
-	/*			if(error === ReferenceError){ 
-					arr[i] = 0;
-					
-					console.log("El vetor inicial ingresado es menor al numero de ecuaciones, se completó con ceros")
-					
-				}*/
-				console.log(error)
-			}
-		}
-		entrada.value = arr;
-		return	arr 
-		
-	}
-}
-
-
 //========================  MAIN  function ============================
 
-crearmatriz = document.getElementById("crearMatriz");
+var crearmatriz = document.getElementById("crearMatriz");
 crearmatriz.addEventListener("click", ()=>{crearInputMatriz();});
 
-calcular = document.getElementById("calcular");
-calcular.addEventListener("click",
-
+var calcular = document.getElementById("calcular");
+calcular.addEventListener("click",						// Ejecuta las funciones al hacer click en el boton "Calcular"
 () => {
 
-    //  Solucion para Matrices de Orden n  
-    //var matrizADinamica = crearMatrizCuadrada(numEcuaciones)
-
-   // var textJacobi = document.getElementById("jacobi")
-
-    //================ Variables ====================
+   
+//================ Elementos de entrada/salida de datos en documento html ====================
 
     var inputNumEc = document.getElementById("numecuaciones");
     var numeroEcuaciones = parseInt(inputNumEc.value);
 
-   /* matrizAOriginal =  [[-3, 9,-1, 3],              // ORIGINAL
-                        [ 2,-1,13,-1],
-                        [ 5,-1, 2, 8],
-                        [ 6, 3,-1,-2]];
-*/
-
     var inputVectorInicial = document.getElementById("vectorinicial");
     var vectorInicial = crearVectorInicial(inputVectorInicial, numeroEcuaciones);
-    console.log(vectorInicial);
-    //var vectorInicial = [0,0,0,0];
-    //console.log(vectorISeparado);
-    //var vectorInicial = vectorISeparado.map();
-
-   // var matrizSolucion = [21,-11,-7,5];
-
-    //var vectorXResultado = [0,0,0,0];
-
+    
     var inputmaxIteraciones = document.getElementById("maxiteraciones");
     var maxIteraciones = parseInt(inputmaxIteraciones.value);
-
-
-    //expError
+   
     var inputepsilon = document.getElementById("epsilon");
     var epsilonPrecision = Math.pow(10,parseInt(inputepsilon.value));
 
@@ -447,14 +408,16 @@ calcular.addEventListener("click",
     
     var textResultados = document.getElementById("resultadositer")
     textResultados.innerText = ""
+    
     var textJacobi = document.getElementById("jacobi")
     textJacobi.innerText = ""
+    
     var textGauss = document.getElementById("gauss")
     textGauss.innerText = ""
  // ===================================================
 
-    matrizAOriginal = crearMatrizCuadrada(numeroEcuaciones)
-    matrizSolucion = crearMatrizB(numeroEcuaciones)
+    var matrizAOriginal = crearMatrizCuadrada(numeroEcuaciones)
+    var matrizSolucion = crearMatrizB(numeroEcuaciones)
 
     if (matrizDominante(numeroEcuaciones,matrizAOriginal)) {
     
@@ -472,44 +435,8 @@ calcular.addEventListener("click",
         console.log(resultadoGauss)
     
     }
-    
-/*
-    console.log("============ METODO JACOBI =============")
-    //resultadoJacobi = jacobi();
-    //console.log(resultadoJacobi)
 
-    valor = (-3*resultadoJacobi[0])+(9*resultadoJacobi[1])+(-1*resultadoJacobi[2])+(3*resultadoJacobi[3])
-    console.log("Solucion Ec1 = " + valor)
-
-    valor = (2*resultadoJacobi[0])+(-1*resultadoJacobi[1])+(13*resultadoJacobi[2])+(-1*resultadoJacobi[3])
-    console.log("Solucion Ec2 = " + valor)
-
-    valor = (5*resultadoJacobi[0])+(-1*resultadoJacobi[1])+(2*resultadoJacobi[2])+(8*resultadoJacobi[3])
-    console.log("Solucion Ec3 = " + valor)
-
-    valor = (6*resultadoJacobi[0])+(3*resultadoJacobi[1])+(-1*resultadoJacobi[2])+(-2*resultadoJacobi[3])
-    console.log("Solucion Ec4 = " + valor)
-
-
-    console.log("============ METODO GAUSS-SEIDEL ==============")
-    //resultadoGauss = gaussSeidel();
-    //console.log(resultadoGauss)
-
-    valor = (-3*resultadoGauss[0])+(9*resultadoGauss[1])+(-1*resultadoGauss[2])+(3*resultadoGauss[3])
-    console.log("Solucion Ec1 = " + valor)
-
-    valor = (2*resultadoGauss[0])+(-1*resultadoGauss[1])+(13*resultadoGauss[2])+(-1*resultadoGauss[3])
-    console.log("Solucion Ec2 = " + valor)
-
-    valor = (5*resultadoGauss[0])+(-1*resultadoGauss[1])+(2*resultadoGauss[2])+(8*resultadoGauss[3])
-    console.log("Solucion Ec3 = " + valor)
-
-    valor = (6*resultadoGauss[0])+(3*resultadoGauss[1])+(-1*resultadoGauss[2])+(-2*resultadoGauss[3])
-    console.log("Solucion Ec4 = " + valor)
-*/
-}
-
-);
+});
 
 
 
