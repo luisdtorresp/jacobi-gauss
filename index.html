@@ -12,18 +12,28 @@
 </head>
 <body >
 	
-	<section class="hero is-light">
-	<div class="container hero-body is-bold">
+	<section class="hero is-medium is-light">
+	<div class="hero-body ">
+		<div class="container has-text-centered">
 			<h1 class="title is-size-1">
 				Algoritmos de Jacobi y Gauss-Seidel
 			</h1>
 			<p class="subtitle">
 				 Métodos iterativos para resolver sistemas de ecuaciones lineales.
 			</p>
+		</div>
     </div>
 	</section>
-    <section class="section">
-    <div class="container ">
+	
+    <section id="aplicacion" class="pb-6 mb-6">
+	<div id="tabs" class="tabs is-centered is-boxed is-fullwidth has-background-light">
+		<ul>			
+			<li><a href="#teoria"> Teoría </a></li>
+			<li class="is-active"><a href="#aplicacion"> Aplicación </a></li>
+			<li ><a href="#codigo"> Código </a></li>
+		</ul>
+	</div>	
+    <div class="container px-5">
         
         <div class="columns box has-background-light">
             <div class="column is-two-thirds">
@@ -117,7 +127,88 @@
         
     </div>
     </section>
-
+	
+	<section id="teoria" class="pb-6 mb-6">
+		<div id="tabs" class="tabs is-centered is-boxed is-fullwidth has-background-light">
+			<ul>			
+				<li class="is-active" ><a href="#teoria"> Teoría </a></li>
+				<li ><a href="#aplicacion"> Aplicación </a></li>
+				<li ><a href="#codigo"> Código </a></li>
+			</ul>
+		</div>
+		<div class="container px-5">
+			<h2 class="title has-text-centered"> Métodos Iterativos</h2>
+			<div class="columns box has-background-light">
+				<div class="column conceptos">
+					<ul>
+						<li>
+							<h2 class="title"> <a href="https://www.wikiwand.com/es/M%C3%A9todo_de_Gauss-Seidel" target="_blank_" title="Ver mas en Wikipedia"> Gauss-Seidel </a></h2>
+							<p class="block px-6"> En análisis numérico el método de Gauss-Seidel es un método iterativo utilizado para resolver sistemas de ecuaciones lineales.
+								El método se llama así en honor a los matemáticos alemanes Carl Friedrich Gauss y Philipp Ludwig von Seidel y es similar al método de Jacobi.
+							</p>
+							<p class="block px-6">	Aunque este método puede aplicarse a cualquier sistema de ecuaciones lineales que produzca una matriz (cuadrada, naturalmente pues para que exista solución única,
+								 el sistema debe tener tantas ecuaciones como incógnitas) de coeficientes con los elementos de su diagonal no-nulos, la convergencia del método solo se garantiza
+								 si la matriz es diagonalmente dominante o si es simétrica y, a la vez, definida positiva.
+							</p>						
+						</li>
+						<br>
+						<li>
+							<h2 class="title"><a href="https://www.wikiwand.com/es/M%C3%A9todo_de_Jacobi" target="_blank_" title="Ver mas en Wikipedia">Jacobi</a> </h2>
+							<p class="block px-6">
+								En análisis numérico el método de Jacobi es un método iterativo, usado para resolver sistemas de ecuaciones lineales del tipo Ax = b.
+								El algoritmo toma su nombre del matemático alemán Carl Gustav Jakob Jacobi. El método de Jacobi consiste en usar fórmulas como iteración de punto fijo.
+							</p>	 
+							<p class="block px-6">								 
+								 La base del método consiste en construir una sucesión convergente definida iterativamente. 
+								 El límite de esta sucesión es precisamente la solución del sistema. A efectos prácticos si el algoritmo se detiene después de un número finito de pasos 
+								 se llega a una aproximación al valor de x de la solución del sistema. 
+							</p>
+							
+						</li>
+					</ul>
+					
+				</div>				
+			</div>
+			<div id="tabs" class="columns tabs box is-small is-centered is-fullwidth has-background-light">
+				<ul>			
+					<li class="is-active"><a href="#teoria" > Teoría </a></li>
+					<li ><a href="#aplicacion"> Aplicación </a></li>
+					<li ><a href="#codigo"> Código </a></li>
+				</ul>
+			</div>
+			
+		</div>
+		
+	</section>
+	
+	<section id="codigo" class="pb-6 mb-6">
+		<div id="tabs" class="tabs is-centered is-boxed is-fullwidth has-background-light">
+			<ul>			
+				<li ><a href="#teoria"> Teoría </a></li>
+				<li ><a href="#aplicacion"> Aplicación </a></li>
+				<li class="is-active" ><a href="#codigo"> Código </a></li>
+			</ul>
+		</div>
+		<div class="container px-5">
+			<h2 class="title has-text-centered has-text-link is-size-5"> Algoritmos implementados en JavaScript</h2>
+			<h3 class="title is-size-3"> Jacobi</h3>
+			<script src="https://gist.github.com/luisdtorresp/ca1a32170e7f853d652d6ceefe9458f4.js"></script>
+			
+			<h3 class="title is-size-3"> Gauss-Seidel</h3>
+			<script src="https://gist.github.com/luisdtorresp/296ca9a0e86745946162379b9f024a56.js"></script>
+			
+			<div id="tabs" class="columns tabs box is-small is-centered is-fullwidth has-background-light">
+				<ul>			
+					<li ><a href="#teoria"> Teoría </a></li>
+					<li ><a href="#aplicacion"> Aplicación </a></li>
+					<li class="is-active"><a href="#codigo"> Código </a></li>
+				</ul>
+			</div>
+		</div>
+		
+		
+		
+	</section>
     <script src="./res/js/JacobiGaussSeidel.js" defer></script>
 </body>
 
