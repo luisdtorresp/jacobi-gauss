@@ -5,9 +5,11 @@
 - Pagina web creada para implementar los algoritmos utilizando JavaScript.
     
     _El sitio consta de tres secciones siendo la principal la calculadora para 
-    resolver de ecuaciones lineales utilizando los métodos propuestos_
-    _La segunda parte muestra brevemente información teórica relevante para comprender los algoritmos_
-    _Por ultimo se añaden el codigo fuente realizado para estos métodos_
+    resolver de ecuaciones lineales utilizando los métodos propuestos._
+    
+    _La segunda parte muestra brevemente información teórica relevante para comprender los algoritmos._
+    
+    _Por ultimo se añaden el codigo fuente realizado para estos métodos._
     
 ---------
 
